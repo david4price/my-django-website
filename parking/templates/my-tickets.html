@@ -1,0 +1,137 @@
+{% extends 'parking_base.html' %}
+
+{% block content %}
+<main class="profile-page layout layout--3">
+  <div class="container">
+    <!-- Topics Start -->
+    {% include 'lotsarea_component.html' %}
+    <!-- Topics End -->
+
+    <!-- Room List Start -->
+    <div class="roomList">
+      <div class="profile">
+        <div class="profile__avatar">
+          <div class="avatar avatar--large active">
+            <img src="{{user.avatar.url}}" />
+          </div>
+        </div>
+        <div class="profile__info">
+          <p>@{{user.name}}</p>
+          <h4>{{user.email}}</h4>
+          {% if request.user == user %}
+          <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+          {% endif %}
+        </div>
+        <div class="profile__about">
+            <h3>Account Balance</h3>
+            <p>
+              {{user.balance}} ₪
+            </p>
+          </div>
+        <div class="profile__about">
+          <h3>Car Number</h3>
+          <p>
+            {{user.car_num}}
+          </p>
+        </div>
+      </div>
+
+      <div class="roomList__header">
+        <div>
+            {% if request.user.is_superuser %}
+                <h2>Parking Lots Managed by {{user.name}}</a>
+                </h2>
+            {% else %}
+                <h2>Active tickets for {{user.name}}</a>
+                </h2>
+            {% endif %}
+        </div>
+      </div>
+      {% if request.user.is_superuser %}
+
+      {% include 'parkinglots_component.html' %}
+
+      <div class="room__conversation">
+        <div class="threads scroll">
+
+
+          {% for ticket in lot_tickets %}
+            {% if ticket.exit_time == None %}
+                <div class="thread">
+                    <div class="thread__top">
+                    <div class="thread__author">
+                        <a href="#" class="thread__authorInfo">
+                        <div class="avatar avatar--small">
+                            <img src="{{ticket.user.avatar.url}}" />
+                        </div>
+                        <span>@{{ticket.user.name}}</span>
+                        </a>
+                        <span class="thread__date">{{ticket.enter_time|timesince}} ago</span>
+                    </div>
+                    <div class="room__details">
+                        <a href="{% url 'pay-ticket' ticket.id %}" class="room__topics">
+                        <span>End Parking</span>
+                        </a>
+                    </div>
+                    </div>
+                    <div class="thread__details">
+                    Parked In "{{ticket.parkingLot}}"
+                    </div>
+                    <div class="thread__details">
+                        Hourly Charge For This Lot Is {{ticket.parkingLot.price}} ₪
+                    </div>
+                </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      {% else %}
+
+      <div class="room__conversation">
+        <div class="threads scroll">
+
+
+          {% for ticket in lot_tickets %}
+            {% if ticket.exit_time == None %}
+                <div class="thread">
+                    <div class="thread__top">
+                    <div class="thread__author">
+                        <a href="#" class="thread__authorInfo">
+                        <div class="avatar avatar--small">
+                            <img src="{{ticket.user.avatar.url}}" />
+                        </div>
+                        <span>@{{ticket.user.name}}</span>
+                        </a>
+                        <span class="thread__date">{{ticket.enter_time|timesince}} ago</span>
+                    </div>
+                    <div class="room__details">
+                        <a href="{% url 'pay-ticket' ticket.id %}" class="room__topics">
+                        <span>End Parking</span>
+                        </a>
+                    </div>
+                    </div>
+                    <div class="thread__details">
+                    Parked In "{{ticket.parkingLot}}"
+                    </div>
+                    <div class="thread__details">
+                        Hourly Charge For This Lot Is {{ticket.parkingLot.price}} ₪
+                    </div>
+                </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      {% endif %}
+
+
+    </div>
+    <!-- Room List End -->
+
+    <!-- Activities Start -->
+    {% include 'activity_component.html' %}
+    <!-- Activities End -->
+  </div>
+</main>
+{% endblock content %}

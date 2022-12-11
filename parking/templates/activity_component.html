@@ -1,0 +1,27 @@
+<div class="activities">
+    <div class="activities__header">
+        <h2>Recent Activities</h2>
+    </div>
+    {% for ticket in parking_tickets %}
+    <div class="activities__box">
+        <div class="activities__boxHeader roomListRoom__header">
+            <a href="#" class="roomListRoom__author">
+                <div class="avatar avatar--small">
+                    <img src="{{ticket.user.avatar.url}}" />
+                </div>
+                <p>
+                    @{{ticket.user.name}}
+                    <span>{{ticket.enter_time|timesince}} ago</span>
+                </p>
+            </a>
+
+
+        </div>
+        <div class="activities__boxContent">
+            <p>just parked in "{{ticket.parkingLot.lot_type}}" - <a href="#">"{{ticket.parkingLot}}"</a></p>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
